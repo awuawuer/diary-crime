@@ -1,26 +1,33 @@
 "use client";
 import React from "react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function CrimeReportForm() {
   const [formData, setFormData] = useState({
-    typeOfCrime: "",
-    specificDetail: "",
-    location: "",
-    date: "",
-    time: "",
-    suspects: "",
-    suspectDescriptions: "",
-    vehicles: "",
-    victim: "",
-    witnesses: "",
-    recurring: false,
-    otherDetails: "",
+    crime_type: "",
+    crime_description: "",
+    crime_location: "",
+    crime_date: "",
+    crime_time: "",
+    suspect_name: "",
+    suspect_description: "",
+    vehicle_type: "",
+    victim_name: "",
+    witness_name: "",
+    One_time_occurrence: false,
+    other_details: "",
   });
 
   const [ethicalAccepted, setEthicalAccepted] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // ✅ Submission state
+  const [submitted, setSubmitted] = useState(false);  // const router = useRouter();
+  const router = useRouter();
+  const [redirecting, setRedirecting] = useState(false);
+
+
+  
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -44,30 +51,87 @@ export default function CrimeReportForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!ethicalAccepted) {
       setShowError(true);
       return;
     }
-
+  
     setShowError(false);
-    setSubmitted(true); // ✅ Mark as submitted
-    console.log("Form submitted:", formData);
+  
+    try {
+      const res = await fetch("http://localhost/crime_api/anonymous", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include", // Include cookies for session-based auth
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Form submitted successfully:", data);
+        setSubmitted(true);
+        setRedirecting(true);
+      } else {
+        const errorData = await res.text();
+        console.error("Failed to submit:", errorData);
+        alert("Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
+
+  React.useEffect(() => {
+    if (submitted) {
+      const timer = setTimeout(() => {
+        alert("Thanks, your report is recieved. Redirecting to home page...");
+        router.push("/");
+      }, 3000); // 3 seconds
+  
+      return () => clearTimeout(timer); // cleanup
+    }
+  }, [submitted]);
+  
   // ✅ Submission message
   if (submitted) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Thank you for your report</h1>
+        <h1 className="text-3xl font-bold mb-4">Your report is received. Thank you!</h1>
         <p className="text-lg">
           We appreciate your contribution to justice and safety.
         </p>
+        <p className="text-sm text-gray-600 mt-4">Redirecting to homepage...</p>
+  
+        {redirecting && (
+          <div className="mt-4 flex justify-center">
+            <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
       </div>
     );
   }
+  
+  
+ 
+  
+  // if (submitted) {
+  
+  //   return (
+  //     <div className="max-w-3xl mx-auto px-4 py-8 text-center">
+  //       <h1 className="text-3xl font-bold mb-4">Your report is received. Thank you!</h1>
+  //       <p className="text-lg">
+  //         We appreciate your contribution to justice and safety.
+  //       </p>
+  //       <p className="text-sm text-gray-600 mt-4">Redirecting to homepage...</p>
+  //     </div>
+  //   );
+  // }
+
 
   return (
     <main className="bg-gray-200">
@@ -87,26 +151,26 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Type of Crime</label>
               <select
-                name="typeOfCrime"
-                value={formData.typeOfCrime}
+                name="crime_type"
+                value={formData.crime_type}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 required
               >
                 <option value="">Select the crime type</option>
-                <option value="theft">Theft</option>
-                <option value="assault">Assault</option>
-                <option value="drug_trafficking">Drug Trafficking</option>
-                <option value="other">Other</option>
+                <option value="Theft">Theft</option>
+                <option value="Assault">Assault</option>
+                <option value="Drug Trafficking">Drug Trafficking</option>
+                <option value="Other">Other</option>
               </select>
             </div>
 
             <div>
               <label className="block font-medium">Specific Detail</label>
               <textarea
-                name="specificDetail"
+                name="crime_description"
                 placeholder="Describe how the crime was committed, any weapons used, etc."
-                value={formData.specificDetail}
+                value={formData.crime_description}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={4}
@@ -118,9 +182,9 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Location</label>
               <input
                 type="text"
-                name="location"
+                name="crime_location"
                 placeholder="e.g., 123 Main St, Building A, 2nd Floor"
-                value={formData.location}
+                value={formData.crime_location}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 required
@@ -131,8 +195,8 @@ export default function CrimeReportForm() {
                 <label className="block font-medium">Date</label>
                 <input
                   type="date"
-                  name="date"
-                  value={formData.date}
+                  name="crime_date"
+                  value={formData.crime_date}
                   onChange={handleChange}
                   className="w-full border rounded p-2 mt-1"
                   required
@@ -142,8 +206,8 @@ export default function CrimeReportForm() {
                 <label className="block font-medium">Time</label>
                 <input
                   type="time"
-                  name="time"
-                  value={formData.time}
+                  name="crime_time"
+                  value={formData.crime_time}
                   onChange={handleChange}
                   className="w-full border rounded p-2 mt-1"
                   required
@@ -162,9 +226,9 @@ export default function CrimeReportForm() {
                 Suspects or Individuals (Names if known)
               </label>
               <textarea
-                name="suspects"
+                name="suspect_name"
                 placeholder="Enter any known names or contact details"
-                value={formData.suspects}
+                value={formData.suspect_name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -176,9 +240,9 @@ export default function CrimeReportForm() {
                 Descriptions of Suspects or Individuals
               </label>
               <textarea
-                name="suspectDescriptions"
+                name="suspect_description"
                 placeholder="e.g., Height, clothing, hair color, tattoos"
-                value={formData.suspectDescriptions}
+                value={formData.suspect_description}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={3}
@@ -188,9 +252,9 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Vehicles Involved</label>
               <textarea
-                name="vehicles"
+                name="vehicle_type"
                 placeholder="e.g., Black Toyota Corolla, license plate ABC123"
-                value={formData.vehicles}
+                value={formData.vehicle_type}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -209,9 +273,9 @@ export default function CrimeReportForm() {
               </label>
               <input
                 type="text"
-                name="victim"
+                name="victim_name"
                 placeholder="Optional: Victim's name if known"
-                value={formData.victim}
+                value={formData.victim_name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
               />
@@ -220,9 +284,9 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Witnesses</label>
               <textarea
-                name="witnesses"
+                name="witness_name"
                 placeholder="List any witnesses or people nearby"
-                value={formData.witnesses}
+                value={formData.witness_name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -230,43 +294,44 @@ export default function CrimeReportForm() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Is this a recurring pattern?
-              </label>
-              <div className="flex space-x-6">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="recurring"
-                    value="yes"
-                    checked={formData.recurring === true}
-                    onChange={() =>
-                      setFormData((prev) => ({ ...prev, recurring: true }))
-                    }
-                  />
-                  <span>Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="recurring"
-                    value="no"
-                    checked={formData.recurring === false}
-                    onChange={() =>
-                      setFormData((prev) => ({ ...prev, recurring: false }))
-                    }
-                  />
-                  <span>No</span>
-                </label>
-              </div>
-            </div>
+  <label className="block font-medium mb-1">
+    Is this a recurring pattern?
+  </label>
+  <div className="flex space-x-6">
+    <label className="flex items-center space-x-2">
+      <input
+        type="radio"
+        name="One_time_occurrence"
+        value="yes"
+        checked={formData.One_time_occurrence === true}
+        onChange={() =>
+          setFormData((prev) => ({ ...prev, One_time_occurrence: true }))
+        }
+      />
+      <span>Yes</span>
+    </label>
+    <label className="flex items-center space-x-2">
+      <input
+        type="radio"
+        name="One_time_occurrence"
+        value="no"
+        checked={formData.One_time_occurrence === false}
+        onChange={() =>
+          setFormData((prev) => ({ ...prev, One_time_occurrence: false }))
+        }
+      />
+      <span>No</span>
+    </label>
+  </div>
+</div>
+
 
             <div>
               <label className="block font-medium">Any Other Details</label>
               <textarea
-                name="otherDetails"
+                name="other_details"
                 placeholder="Add anything else that could assist the investigation"
-                value={formData.otherDetails}
+                value={formData.other_details}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={4}

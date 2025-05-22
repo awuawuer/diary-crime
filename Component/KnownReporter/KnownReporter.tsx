@@ -1,27 +1,70 @@
 "use client";
 import react from "react";
 import Link from "next/link";
-import { useState } from "react";
+// import { useState } from "react";
+import { fetchUserProfile } from "@/lib/auth"; // Adjust the path if needed
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+
+
 
 export default function CrimeReportForm() {
+  const [user, setUser] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const verify = async () => {
+      try {
+        const profile = await fetchUserProfile();
+        console.log("Fetched profile:", profile);
+        if (!profile) {
+          router.replace("/auth/Login");
+          return;
+        }
+        setUser(profile);
+  
+        // Pre-fill form fields from session data
+        setFormData((prev) => ({
+          ...prev,
+          name: `${profile.firstname} ${profile.surname}`,
+          email: profile.email || "",
+          phone: profile.phone || "",
+          track_id: profile.user_id || "",
+
+        }));
+      } catch (err) {
+        router.replace("/auth/Login");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    verify();
+  }, []);
+  
+
   const [formData, setFormData] = useState({
-    reporterName: "",
-    reporterPhone: "",
-    reporterEmail: "",
-    typeOfCrime: "",
-    location: "",
-    date: "",
-    time: "",
-    crimeDescription: "",
-    victimNames: "",
-    victimAges: "",
-    victimInjuries: "",
-    suspectDescriptions: "",
-    suspectMotives: "",
-    suspectConnections: "",
-    witnessNames: "",
-    witnessContacts: "",
-    backgroundInfo: "",
+    name: "",
+    phone: "",
+    email: "",
+    type_of_crime: "",
+    crime_location: "",
+    crime_date: "",
+    crime_time: "",
+    crime_description: "",
+    victim_name: "",
+    victim_age: "",
+    victim_injury: "",
+    suspect_description: "",
+    suspect_motive: "",
+    suspect_connection_to_crime: "",
+    witness_name: "",
+    witness_contact: "",
+    previous_incident: "",
+    status: "Pending",
+    track_id: "",
   });
 
   const [ethicalAccepted, setEthicalAccepted] = useState(false);
@@ -50,24 +93,43 @@ export default function CrimeReportForm() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!ethicalAccepted) {
       setShowError(true);
       return;
     }
-
+  
     setShowError(false);
-    console.log("Form submitted:", formData);
-    setSubmitted(true);
-    // TODO: Add API submission or storage logic
+  
+    try {
+      const res = await fetch("http://localhost/crime_api/known", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+        credentials: "include", // Include cookies for session-based auth
+      });
+  
+      if (res.ok) {
+        const data = await res.json();
+        console.log("Form submitted successfully:", data);
+        setSubmitted(true);
+      } else {
+        const errorData = await res.text();
+        console.error("Failed to submit:", errorData);
+        alert("Submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
-
+  
   if (submitted) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Thank you for your report</h1>
+        <h1 className="text-3xl font-bold mb-4">Your report is recieved. Thank you!</h1>
         <p className="text-lg">
           We appreciate your contribution to justice and safety.
         </p>
@@ -94,21 +156,21 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Name</label>
               <input
                 type="text"
-                name="reporterName"
+                name="name"
                 placeholder="Your full name"
-                value={formData.reporterName}
+                value={formData.name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
-                required
+                readOnly
               />
             </div>
             <div>
               <label className="block font-medium">Phone</label>
               <input
                 type="tel"
-                name="reporterPhone"
+                name="phone"
                 placeholder="Your phone number"
-                value={formData.reporterPhone}
+                value={formData.phone}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 required
@@ -118,12 +180,12 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Email</label>
               <input
                 type="email"
-                name="reporterEmail"
+                name="email"
                 placeholder="Your email address"
-                value={formData.reporterEmail}
+                value={formData.email}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
-                required
+                required readOnly
               />
             </div>
           </fieldset>
@@ -137,9 +199,9 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Type of Crime</label>
               <input
                 type="text"
-                name="typeOfCrime"
+                name="type_of_crime"
                 placeholder="e.g., Theft, Assault, Drug Trafficking"
-                value={formData.typeOfCrime}
+                value={formData.type_of_crime}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 required
@@ -149,9 +211,9 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Location</label>
               <input
                 type="text"
-                name="location"
+                name="crime_location"
                 placeholder="Exact location of the incident"
-                value={formData.location}
+                value={formData.crime_location}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 required
@@ -162,8 +224,8 @@ export default function CrimeReportForm() {
                 <label className="block font-medium">Date</label>
                 <input
                   type="date"
-                  name="date"
-                  value={formData.date}
+                  name="crime_date"
+                  value={formData.crime_date}
                   onChange={handleChange}
                   className="w-full border rounded p-2 mt-1"
                   required
@@ -173,8 +235,8 @@ export default function CrimeReportForm() {
                 <label className="block font-medium">Time</label>
                 <input
                   type="time"
-                  name="time"
-                  value={formData.time}
+                  name="crime_time"
+                  value={formData.crime_time}
                   onChange={handleChange}
                   className="w-full border rounded p-2 mt-1"
                   required
@@ -187,9 +249,9 @@ export default function CrimeReportForm() {
                 Describe how the crime occurred
               </label>
               <textarea
-                name="crimeDescription"
+                name="crime_description"
                 placeholder="Detailed explanation of how the crime took place"
-                value={formData.crimeDescription}
+                value={formData.crime_description}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={4}
@@ -207,9 +269,9 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Victim Names</label>
               <input
                 type="text"
-                name="victimNames"
+                name="victim_name"
                 placeholder="Full names of victims"
-                value={formData.victimNames}
+                value={formData.victim_name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
               />
@@ -217,10 +279,10 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Victim Ages</label>
               <input
-                type="text"
-                name="victimAges"
+                type="number"
+                name="victim_age"
                 placeholder="Age(s) of victims"
-                value={formData.victimAges}
+                value={formData.victim_age}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
               />
@@ -228,9 +290,9 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Victim Injuries</label>
               <textarea
-                name="victimInjuries"
+                name="victim_injury"
                 placeholder="Describe injuries if any"
-                value={formData.victimInjuries}
+                value={formData.victim_injury}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -246,9 +308,9 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Suspect Descriptions</label>
               <textarea
-                name="suspectDescriptions"
+                name="suspect_description"
                 placeholder="Physical features, clothing, etc."
-                value={formData.suspectDescriptions}
+                value={formData.suspect_description}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -257,9 +319,9 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Suspect Motives</label>
               <textarea
-                name="suspectMotives"
+                name="suspect_motive"
                 placeholder="Possible reasons behind the crime"
-                value={formData.suspectMotives}
+                value={formData.suspect_motive}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -270,9 +332,9 @@ export default function CrimeReportForm() {
                 Suspect Connections to Victim
               </label>
               <textarea
-                name="suspectConnections"
+                name="suspect_connection_to_crime"
                 placeholder="Relationship or interactions with the victim"
-                value={formData.suspectConnections}
+                value={formData.suspect_connection_to_crime}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={2}
@@ -289,9 +351,9 @@ export default function CrimeReportForm() {
               <label className="block font-medium">Witness Names</label>
               <input
                 type="text"
-                name="witnessNames"
+                name="witness_name"
                 placeholder="Names of witnesses"
-                value={formData.witnessNames}
+                value={formData.witness_name}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
               />
@@ -302,9 +364,9 @@ export default function CrimeReportForm() {
               </label>
               <input
                 type="text"
-                name="witnessContacts"
+                name="witness_contact"
                 placeholder="Phone or email contacts"
-                value={formData.witnessContacts}
+                value={formData.witness_contact}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
               />
@@ -319,14 +381,30 @@ export default function CrimeReportForm() {
             <div>
               <label className="block font-medium">Previous Incidents</label>
               <textarea
-                name="backgroundInfo"
+                name="previous_incident"
                 placeholder="Any previous related incidents or history"
-                value={formData.backgroundInfo}
+                value={formData.previous_incident}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
                 rows={3}
               />
             </div>
+
+              <input
+                type="hidden"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                className="w-full border rounded p-2 mt-1"
+              />
+
+<input
+                type="hidden"
+                name="track_id"
+                value={formData.track_id}
+                onChange={handleChange}
+                className="w-full border rounded p-2 mt-1"
+              />
           </fieldset>
 
           {/* Ethical Considerations */}
@@ -358,12 +436,13 @@ export default function CrimeReportForm() {
           </fieldset>
 
           <div className="text-center">
-            <Link
-              href="/Logindashboard" // change to your actual route
-              className="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              Submit Report
-            </Link>
+            <button
+  type="submit"
+  className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
+>
+Submit Report
+</button>
+
           </div>
         </form>
       </div>

@@ -1,11 +1,32 @@
 "use client";
-import { useState } from "react";
 
-import CaseReportTable from "@/Component/CaseReportTable/CaseReportTable"; // Link to case reports
-import KnownReporter from "@/Component/KnownReporter/KnownReporter"; // Link to submission form
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { fetchUserProfile } from "@/lib/auth";
+
+import CaseReportTable from "@/Component/CaseReportTable/CaseReportTable";
+import KnownReporter from "@/Component/KnownReporter/KnownReporter";
 
 export default function Dashboard() {
+  const router = useRouter();
+
   const [activePage, setActivePage] = useState("dashboard");
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch the user session
+  useEffect(() => {
+    fetchUserProfile()
+      .then((profile) => {
+        setUser(profile);
+        setLoading(false);
+      })
+      .catch(() => {
+        setUser(null);
+        setLoading(false);
+        router.push("/auth/Login"); // Redirect to login if unauthenticated
+      });
+  }, []);
 
   const renderContent = () => {
     switch (activePage) {
@@ -32,11 +53,14 @@ export default function Dashboard() {
     }
   };
 
+  // if (loading) return <p className="p-8 text-lg">Loading...</p>;
+  // if (!user) return null;
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-white p-6 shadow-lg">
-        <h2 className="text-xl font-bold mb-6">Reporter Portal</h2>
+        <h4 className="text-xl font-bold mb-6">Crime Reporter Portal</h4>
         <ul className="space-y-4 text-gray-700 font-medium">
           <li
             className={`hover:text-blue-600 cursor-pointer ${
