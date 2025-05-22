@@ -1,43 +1,37 @@
 "use client";
-import React, { useState } from "react";
-import CaseDetailsModal from "@/Components/CaseDetailsModal/CaseDetailsModal"; // adjust path if needed
+import React, { useEffect, useState } from "react";
+import CaseDetailsModal from "@/Components/CaseDetailsModal/CaseDetailsModal";
 
 interface CaseReport {
-  reporterName: string;
-  typeOfCrime: string;
-  location: string;
-  date: string;
-  time: string;
-  crimeDescription: string;
-  status: "Pending" | "In Review" | "Resolved";
+  type_of_crime: string;
+  crime_location: string;
+  crime_date: string;
+  crime_time: string;
+  crime_description: string;
+  status: string;
 }
 
-const mockCaseReports: CaseReport[] = [
-  {
-    reporterName: "Jane Doe",
-    typeOfCrime: "Theft",
-    location: "123 Market St",
-    date: "2025-05-10",
-    time: "14:30",
-    crimeDescription:
-      "A wallet was stolen from a parked car near the grocery store.",
-    status: "Pending",
-  },
-  {
-    reporterName: "John Smith",
-    typeOfCrime: "Assault",
-    location: "Green Park",
-    date: "2025-05-09",
-    time: "18:15",
-    crimeDescription:
-      "Altercation between two individuals near the playground.",
-    status: "In Review",
-  },
-];
-
 export default function CaseReportTable() {
+  const [known, setReport] = useState<CaseReport[]>([]);
   const [selectedReport, setSelectedReport] = useState<CaseReport | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch reports on mount
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await fetch("http://localhost/crime_api/known", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        setReport(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Failed to fetch report", err);
+      }
+    };
+
+    fetchReports();
+  }, []);
 
   const handleViewDetails = (report: CaseReport) => {
     setSelectedReport(report);
@@ -50,23 +44,21 @@ export default function CaseReportTable() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-100 text-gray-600 text-sm font-semibold">
             <tr>
-              <th className="px-4 py-2 text-left">Reporter</th>
-              <th className="px-4 py-2 text-left">Crime Type</th>
-              <th className="px-4 py-2 text-left">Location</th>
-              <th className="px-4 py-2 text-left">Date</th>
-              <th className="px-4 py-2 text-left">Time</th>
+              <th className="px-4 py-2 text-left">Type of Crime</th>
+              <th className="px-4 py-2 text-left">Crime Location</th>
+              <th className="px-4 py-2 text-left">Crime Date</th>
+              <th className="px-4 py-2 text-left">Crime Time</th>
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody className="text-sm text-gray-700 divide-y divide-gray-200">
-            {mockCaseReports.map((report, index) => (
+            {known.map((report, index) => (
               <tr key={index}>
-                <td className="px-4 py-2">{report.reporterName}</td>
-                <td className="px-4 py-2">{report.typeOfCrime}</td>
-                <td className="px-4 py-2">{report.location}</td>
-                <td className="px-4 py-2">{report.date}</td>
-                <td className="px-4 py-2">{report.time}</td>
+                <td className="px-4 py-2">{report.type_of_crime}</td>
+                <td className="px-4 py-2">{report.crime_location}</td>
+                <td className="px-4 py-2">{report.crime_date}</td>
+                <td className="px-4 py-2">{report.crime_time}</td>
                 <td className="px-4 py-2">
                   <span
                     className={`px-2 py-1 rounded text-xs font-semibold ${

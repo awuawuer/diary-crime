@@ -4,6 +4,7 @@ import Link from "next/link";
 import { FaGoogle, FaApple } from "react-icons/fa";
 import Image from "next/image";
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -17,6 +18,8 @@ export default function Signup() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
@@ -51,7 +54,7 @@ export default function Signup() {
     return newErrors;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
@@ -59,6 +62,19 @@ export default function Signup() {
     if (Object.keys(validationErrors).length === 0) {
       setSubmitted(true);
       console.log("Form submitted:", form);
+
+      const res = await fetch("http://localhost/crime_api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+        credentials: "include"
+  
+      });
+
+// ...
+// router.push("/auth/Knownreporter");
+router.push("/auth/Login");
+
       // TODO: Send form data to backend here
 
       // Optional: Reset form
@@ -194,12 +210,14 @@ export default function Signup() {
             {errors.agree && (
               <p className="text-red-600 text-sm">{errors.agree}</p>
             )}
-            <Link
-              href="/auth/Knownreporter"
-              className="w-full inline-block text-center bg-green-800 text-white py-2 rounded hover:bg-green-700 transition cursor-pointer"
-            >
-              Create account
-            </Link>
+<button
+  type="submit"
+  className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
+>
+  Create account
+</button>
+
+
             {submitted && Object.keys(errors).length === 0 && (
               <p className="text-green-700 mt-2 text-sm">
                 Account created successfully
