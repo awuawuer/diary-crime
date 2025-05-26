@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 export default function OTPResetPage() {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
@@ -9,6 +11,8 @@ export default function OTPResetPage() {
   const [resendTimer, setResendTimer] = useState<number>(30);
   const [canResend, setCanResend] = useState<boolean>(false);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const router = useRouter();
+
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -35,15 +39,49 @@ export default function OTPResetPage() {
     }
   };
 
-  const handleReset = () => {
+  // const handleReset = () => {
+  //   if (otp.some((digit) => digit === "")) {
+  //     setError("Please enter all 6 digits of the OTP.");
+  //   } else {
+  //     setError("");
+  //     console.log("Entered OTP:", otp.join(""));
+  //     // Proceed with OTP submission logic here
+  //   }
+  // };
+
+
+  const handleReset = async () => {
     if (otp.some((digit) => digit === "")) {
       setError("Please enter all 6 digits of the OTP.");
-    } else {
-      setError("");
-      console.log("Entered OTP:", otp.join(""));
-      // Proceed with OTP submission logic here
+      return;
+    }
+  
+    setError("");
+    const enteredOTP = otp.join("");
+  
+    try {
+      const res = await fetch("http://localhost/crime_api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // for session
+        body: JSON.stringify({ otp: enteredOTP }),
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        alert("OTP verified successfully! Redirecting...");
+        // redirect to reset page or login
+          router.push("/reset-password"); // use useRouter from next/navigation
+      } else {
+        setError(data.message || "OTP verification failed.");
+      }
+    } catch (err) {
+      console.error("Error verifying OTP:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
+  
 
   const handleResendOTP = () => {
     console.log("Resend OTP logic triggered");
