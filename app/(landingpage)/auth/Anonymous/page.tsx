@@ -3,7 +3,6 @@ import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 export default function CrimeReportForm() {
   const [formData, setFormData] = useState({
     crime_type: "",
@@ -22,12 +21,9 @@ export default function CrimeReportForm() {
 
   const [ethicalAccepted, setEthicalAccepted] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [submitted, setSubmitted] = useState(false);  // const router = useRouter();
+  const [submitted, setSubmitted] = useState(false); // const router = useRouter();
   const router = useRouter();
   const [redirecting, setRedirecting] = useState(false);
-
-
-  
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -53,14 +49,14 @@ export default function CrimeReportForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!ethicalAccepted) {
       setShowError(true);
       return;
     }
-  
+
     setShowError(false);
-  
+
     try {
       const res = await fetch("http://localhost/crime_api/anonymous", {
         method: "POST",
@@ -68,7 +64,7 @@ export default function CrimeReportForm() {
         body: JSON.stringify(formData),
         credentials: "include", // Include cookies for session-based auth
       });
-  
+
       if (res.ok) {
         const data = await res.json();
         console.log("Form submitted successfully:", data);
@@ -85,28 +81,29 @@ export default function CrimeReportForm() {
     }
   };
 
-
   React.useEffect(() => {
     if (submitted) {
       const timer = setTimeout(() => {
         alert("Thanks, your report is recieved. Redirecting to home page...");
         router.push("/");
       }, 3000); // 3 seconds
-  
+
       return () => clearTimeout(timer); // cleanup
     }
   }, [submitted]);
-  
+
   // ✅ Submission message
   if (submitted) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your report is received. Thank you!</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          Your report is received. Thank you!
+        </h1>
         <p className="text-lg">
           We appreciate your contribution to justice and safety.
         </p>
         <p className="text-sm text-gray-600 mt-4">Redirecting to homepage...</p>
-  
+
         {redirecting && (
           <div className="mt-4 flex justify-center">
             <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -115,12 +112,9 @@ export default function CrimeReportForm() {
       </div>
     );
   }
-  
-  
- 
-  
+
   // if (submitted) {
-  
+
   //   return (
   //     <div className="max-w-3xl mx-auto px-4 py-8 text-center">
   //       <h1 className="text-3xl font-bold mb-4">Your report is received. Thank you!</h1>
@@ -131,7 +125,6 @@ export default function CrimeReportForm() {
   //     </div>
   //   );
   // }
-
 
   return (
     <main className="bg-gray-200">
@@ -294,37 +287,42 @@ export default function CrimeReportForm() {
             </div>
 
             <div>
-  <label className="block font-medium mb-1">
-    Is this a recurring pattern?
-  </label>
-  <div className="flex space-x-6">
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="One_time_occurrence"
-        value="yes"
-        checked={formData.One_time_occurrence === true}
-        onChange={() =>
-          setFormData((prev) => ({ ...prev, One_time_occurrence: true }))
-        }
-      />
-      <span>Yes</span>
-    </label>
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="One_time_occurrence"
-        value="no"
-        checked={formData.One_time_occurrence === false}
-        onChange={() =>
-          setFormData((prev) => ({ ...prev, One_time_occurrence: false }))
-        }
-      />
-      <span>No</span>
-    </label>
-  </div>
-</div>
-
+              <label className="block font-medium mb-1">
+                Is this a recurring pattern?
+              </label>
+              <div className="flex space-x-6">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="One_time_occurrence"
+                    value="yes"
+                    checked={formData.One_time_occurrence === true}
+                    onChange={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        One_time_occurrence: true,
+                      }))
+                    }
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="One_time_occurrence"
+                    value="no"
+                    checked={formData.One_time_occurrence === false}
+                    onChange={() =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        One_time_occurrence: false,
+                      }))
+                    }
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+            </div>
 
             <div>
               <label className="block font-medium">Any Other Details</label>

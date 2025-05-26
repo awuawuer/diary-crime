@@ -32,8 +32,7 @@ export default function CaseDetailsModal({
         <h2 className="text-xl font-bold mb-4">Case Details</h2>
         <div className="grid gap-3 text-sm text-gray-800">
           <p>
-            <span className="font-semibold">Reporter Name:</span>{" "}
-            {report.name}
+            <span className="font-semibold">Reporter Name:</span> {report.name}
           </p>
           <p>
             <span className="font-semibold">Type of Crime:</span>{" "}
@@ -44,16 +43,20 @@ export default function CaseDetailsModal({
             {report.crime_location}
           </p>
           <p>
-            <span className="font-semibold">Crime Date:</span> {report.crime_date}
+            <span className="font-semibold">Crime Date:</span>{" "}
+            {report.crime_date}
           </p>
           <p>
-            <span className="font-semibold">Crime Time:</span> {report.crime_time}
+            <span className="font-semibold">Crime Time:</span>{" "}
+            {report.crime_time}
           </p>
           <p>
-            <span className="font-semibold">Crime Report Date:</span> {report.report_date}
+            <span className="font-semibold">Crime Report Date:</span>{" "}
+            {report.report_date}
           </p>
           <p>
-            <span className="font-semibold">Crime Report Time:</span> {report.report_time}
+            <span className="font-semibold">Crime Report Time:</span>{" "}
+            {report.report_time}
           </p>
           <p>
             <span className="font-semibold">Crime Description:</span>{" "}

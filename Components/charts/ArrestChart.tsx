@@ -15,27 +15,27 @@ import {
 const data = [
   {
     name: "2021",
-    Detained: 60,
+    Inmate: 60,
     Trial: 40,
   },
   {
     name: "2022",
-    Detained: 70,
+    Inmate: 70,
     Trial: 60,
   },
   {
     name: "2023",
-    Detained: 90,
+    Inmate: 90,
     Trial: 75,
   },
   {
     name: "2024",
-    Detained: 90,
+    Inmate: 90,
     Trial: 75,
   },
   {
     name: "2025",
-    Detained: 65,
+    Inmate: 65,
     Trial: 55,
   },
 ];
@@ -66,7 +66,7 @@ const AttendanceChart = () => {
             wrapperStyle={{ paddingTop: "20px", paddingBottom: "40px" }}
           />
           <Bar
-            dataKey="Detained"
+            dataKey="Inmate"
             fill="#FAE27C"
             legendType="circle"
             radius={[10, 10, 0, 0]}

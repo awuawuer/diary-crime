@@ -10,7 +10,6 @@ import Image from "next/image";
 // const [user, setUser] = useState(null);
 // const [loading, setLoading] = useState(true);
 
-
 export default function LoginPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
@@ -62,8 +61,8 @@ export default function LoginPage() {
       <div className="hidden md:flex md:w-1/2 bg-green-700 relative text-white items-center justify-center">
         <div className="absolute inset-0 bg-opacity-50"></div>
         <div className="z-10 text-center px-6">
-          <h1 className="text-2xl font-bold">
-            BDIC DIGITAL CRIME DAIRY SOLUTION
+          <h1 className="text-2xl font-bold font-[sora]">
+            BDIC DIGITAL CRIME DIARY SOLUTION
           </h1>
           <Image
             src="/images/officer.png"
@@ -76,7 +75,7 @@ export default function LoginPage() {
 
       {/* Right Section */}
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6 bg-gray-100">
-        <h2 className="text-2xl font-semibold mb-6">Sign in</h2>
+        <h2 className="text-2xl font-semibold mb-6 font-[sora]">Sign in</h2>
         <form onSubmit={handleSubmit} className="w-full max-w-sm">
           <div className="mb-4">
             <input
@@ -100,7 +99,7 @@ export default function LoginPage() {
               required
             />
           </div>
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-4 font-[plus-jakata]">
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" /> Remember me
             </label>

@@ -6,7 +6,7 @@ import { MdEmail, MdPhone } from "react-icons/md";
 
 function Footer() {
   return (
-    <footer className="bg-[#52a43e] text-white px-6 py-8 text-center">
+    <main className="bg-[#52a43e] text-white px-6 py-8 text-center">
       <div className="max-w-[1120px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-0">
         {/* Left Section */}
         <div className="flex flex-col gap-2">
@@ -73,7 +73,7 @@ function Footer() {
           </a>
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* <div className="flex items-center gap-2">
           <p className="text-base font-sans font-normal leading-[100px]">
             Powered By: BDIC 2025
           </p>
@@ -86,9 +86,20 @@ function Footer() {
               // className="h-[50px] relative mt-10"
             />
           </Link>
+        </div> */}
+        <div className="flex items-center gap-2 text-[14px] text-center">
+          <p>Powered by BDIC 2025</p>
+          <a href="https://bdic.ng/" target="_blank" rel="noopener noreferrer">
+            <Image
+              src="/images/BDICLOGO.png"
+              alt="BDIC Logo"
+              width={69}
+              height={70}
+            />
+          </a>
         </div>
       </div>
-    </footer>
+    </main>
   );
 }
 
