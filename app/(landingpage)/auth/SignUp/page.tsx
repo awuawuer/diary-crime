@@ -20,7 +20,6 @@ export default function Signup() {
   const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const { name, value, type, checked } = e.target;
     setForm({
@@ -67,13 +66,12 @@ export default function Signup() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
-        credentials: "include"
-  
+        credentials: "include",
       });
 
-// ...
-// router.push("/auth/Knownreporter");
-router.push("/auth/Login");
+      // ...
+      // router.push("/auth/Knownreporter");
+      router.push("/auth/Login");
 
       // TODO: Send form data to backend here
 
@@ -210,13 +208,12 @@ router.push("/auth/Login");
             {errors.agree && (
               <p className="text-red-600 text-sm">{errors.agree}</p>
             )}
-<button
-  type="submit"
-  className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
->
-  Create account
-</button>
-
+            <button
+              type="submit"
+              className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
+            >
+              Create account
+            </button>
 
             {submitted && Object.keys(errors).length === 0 && (
               <p className="text-green-700 mt-2 text-sm">

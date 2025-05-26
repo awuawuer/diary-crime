@@ -54,23 +54,12 @@ const SidebarMenu = () => {
           {/* Sidebar Links */}
           <div className="space-y-2 text-[12px] font-[Sora]">
             <SidebarLink
-              href="/Dashboard"
+              href="/user-dashboard"
               icon={<Home className="w-6 h-6" strokeWidth={2.5} />}
               label="Dashboard"
-              active={pathname === "/Dashboard"}
+              active={pathname === "/user-dashboard"}
             />
-            <SidebarLink
-              href="/Case-oversight"
-              icon={<Shield className="w-6 h-6" strokeWidth={2.5} />}
-              label="Case Oversight"
-              active={pathname === "/Case-oversight"}
-            />
-            <SidebarLink
-              href="/Userrolemanagement"
-              icon={<Users className="w-6 h-6" strokeWidth={2.5} />}
-              label="User & Role Management"
-              active={pathname === "/Userrolemanagement"}
-            />
+
             <SidebarLink
               href="/agency-management"
               icon={<Shield className="w-6 h-6" strokeWidth={2.5} />}

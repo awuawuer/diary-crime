@@ -4,33 +4,34 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaBullhorn } from "react-icons/fa";
 import { ArrowRight } from "lucide-react";
+
 const slides = [
   {
     id: 1,
     image: "/images/policepics1.png",
     backgroundImage: "/images/Background5.png",
-    backgroundColor: "#1f2937", // Tailwind gray-800 as example
+    backgroundColor: "#1f2937",
     title: (
       <>
         <span className="text-white">BDIC</span>
         <br />
         <span className="text-green-800">DIGITAL CRIME</span>
         <br />
-        <span className="text-white">DAIRY SOLUTION</span>
+        <span className="text-white">DIARY SOLUTION</span>
       </>
     ),
   },
   {
     id: 2,
     backgroundImage: "/images/Background6.png",
-    backgroundColor: "#1f2937", // Only color
+    backgroundColor: "#1f2937",
     title: (
       <>
-        <span className="text-white">YOUR SAFETY</span>
+        <span className="text-white font-[sora]">YOUR SAFETY</span>
         <br />
-        <span className="text-green-800">OUR PRIORITY</span>
+        <span className="text-green-800 font-[sora]">OUR PRIORITY</span>
         <br />
-        <span className="text-white">JOIN THE MOVEMENT</span>
+        <span className="text-white font-[sora]">JOIN THE MOVEMENT</span>
       </>
     ),
   },
@@ -44,7 +45,7 @@ const slides = [
         <br />
         <span className="text-green-800">DIGITAL CRIME</span>
         <br />
-        <span className="text-white">DAIRY SOLUTION</span>
+        <span className="text-white">DIARY SOLUTION</span>
       </>
     ),
   },
@@ -69,12 +70,9 @@ export default function Hero() {
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto slide every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
@@ -84,7 +82,7 @@ export default function Hero() {
 
   return (
     <main
-      className="py-16 px-4 sm:px-6 lg:px-20 bg-cover bg-center min-h-screen relative transition-all duration-700 ease-in-out"
+      className="py-6 sm:py-10 md:py-16 px-4 sm:px-6 lg:px-20 bg-cover bg-center min-h-screen relative transition-all duration-700 ease-in-out"
       style={{
         backgroundImage: slides[currentSlide].backgroundImage
           ? `url(${slides[currentSlide].backgroundImage})`
@@ -97,7 +95,7 @@ export default function Hero() {
         <div className="space-y-6">
           <div className="flex items-center space-x-3">
             <FaBullhorn className="text-yellow-400 text-xl" />
-            <span className="font-semibold text-lg text-white">
+            <span className="font-[plus-jackata] text-lg text-white">
               Your Voice, Your Safety.
             </span>
           </div>
@@ -152,16 +150,14 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Get Started Button */}
           <button className="flex items-center space-x-3 bg-green-800 hover:bg-green-700 px-6 py-3 rounded-full shadow-lg">
             <span className="text-white font-bold text-lg">Get Started</span>
             <ArrowRight className="text-white" />
           </button>
         </div>
 
-        {/* Right Section */}
-        {/* Right Section */}
-        <div className="relative w-full h-auto flex justify-center items-center mt-8 md:mt-0">
+        {/* Right Section (hidden on small screens) */}
+        <div className="hidden md:flex relative w-full h-auto justify-center items-center mt-8 md:mt-0">
           {slides[currentSlide].image && (
             <div className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl h-auto">
               <Image

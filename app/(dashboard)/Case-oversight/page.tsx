@@ -2,8 +2,8 @@
 import React from "react";
 import UserCard from "@/Component/UserCard/UserCard";
 import CaseoversihtTable from "@/Components/Tables/caseoversightTable/caseoversightTable";
-import CountChart from "@/Component/CountChart/CountChart";
-import AttendanceChart from "@/Component/ArrestChart/ArrestChart";
+import CountChart from "@/Components/charts/CountChart";
+import ArrestChart from "@/Components/charts/ArrestChart";
 
 const AdminPage = () => {
   return (
@@ -12,7 +12,6 @@ const AdminPage = () => {
         <UserCard type="Total Case" value={1234} bgColor="bg-green-100" />
         <UserCard type="Total Jurisdiction" value={32} bgColor="bg-gray-100" />
         <UserCard type="Pending Case" value={87} bgColor="bg-yellow-100" />
-        <UserCard type="Flagged Report" value={5} bgColor="bg-red-100" />
       </div>
 
       {/* <MetricCard
@@ -26,9 +25,9 @@ const AdminPage = () => {
         <div className="w-full lg:w-1/3 h-[450px]">
           <CountChart />
         </div>
-        {/* ATTENDANCE CHART */}
+        {/* Arrest CHART */}
         <div className="w-full lg:w-2/3 h-[450px]">
-          <AttendanceChart />
+          <ArrestChart />
         </div>
       </div>
       <div className="min-h-screen bg-gray-100">

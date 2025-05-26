@@ -23,7 +23,7 @@ const Header: React.FC = () => {
       : "px-3 py-3 text-black hover:text-[rgba(82,164,62,1)]";
 
   return (
-    <nav className="h-[100px] relative top-[27px] flex justify-between items-center w-[90%] max-w-[1240px] mx-auto mb-5">
+    <nav className="h-[60px] relative top-[27px] flex justify-between items-center w-[90%] max-w-[1240px] mx-auto mb-7">
       <div className="inline-flex items-center gap-1.5 h-[72.45px]">
         <Link href="/">
           <Image
