@@ -66,10 +66,10 @@ const SidebarMenu = () => {
               active={pathname === "/Case-oversight"}
             />
             <SidebarLink
-              href="/Userrolemanagement"
+              href="/User-role-management"
               icon={<Users className="w-6 h-6" strokeWidth={2.5} />}
               label="User & Role Management"
-              active={pathname === "/Userrolemanagement"}
+              active={pathname === "/User-role-management"}
             />
             <SidebarLink
               href="/agency-management"

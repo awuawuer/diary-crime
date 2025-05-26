@@ -61,10 +61,10 @@ const SidebarMenu = () => {
             />
 
             <SidebarLink
-              href="/agency-management"
+              href="/new-profile"
               icon={<Shield className="w-6 h-6" strokeWidth={2.5} />}
-              label="Agency Management"
-              active={pathname === "/agency-management"}
+              label="New Profile"
+              active={pathname === "/new-profile"}
             />
             <SidebarLink
               href="/analytics"
