@@ -1,25 +1,30 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSendMail = async () => {
     setLoading(true);
     setMessage(null);
     setError(null);
-
+    
     try {
-      const response = await fetch("/api/send-reset-email", {
+      // const response = await fetch("/api/send-reset-email", {
+      const response = await fetch("http://localhost/crime_api/send-reset-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email }),
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -32,7 +37,15 @@ const ForgotPassword: React.FC = () => {
       setError((err as Error).message);
     } finally {
       setLoading(false);
+      setTimeout(() => {
+
+      router.push("/auth/Otp");
+    }, 2000); // 3 seconds
+
+
     }
+
+    
   };
 
   return (
@@ -60,6 +73,7 @@ const ForgotPassword: React.FC = () => {
           </h2>
           <input
             type="email"
+            name="email"
             placeholder="Enter email"
             className="w-full border px-4 py-2 rounded mb-4"
             value={email}
