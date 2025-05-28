@@ -1,42 +1,142 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 export default function ResetPasswordForm() {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const router = useRouter();
+
   
 
-  const handleSubmit = async () => {
-    if (password !== confirm) {
-      setError("Passwords do not match.");
+//   const handleSubmit = async () => {
+//     if (password !== confirm) {
+//       setError("Passwords do not match.");
+//       return;
+//     }
+
+// // try {
+// //   const res = await fetch("http://localhost/crime_api/reset-password", {
+// //     method: "POST",
+// //     headers: { "Content-Type": "application/json" },
+// //     credentials: "include",
+// //     body: JSON.stringify({ password }),
+// //   });
+
+// //   const contentType = res.headers.get("content-type");
+
+// //   if (!res.ok) {
+// //     if (contentType && contentType.includes("application/json")) {
+// //       const data = await res.json();
+// //       setError(data.message || "Failed to reset password");
+// //     } else {
+// //       const text = await res.text();
+// //       setError(text || "Failed to reset password");
+// //     }
+// //     return;
+// //   }
+
+// //   if (contentType && contentType.includes("application/json")) {
+// //     const data = await res.json();
+// //     setSuccess(data.message);
+// //     setError("");
+// //   } else {
+// //     setSuccess("Password reset successful.");
+// //     setError("");
+// //   }
+// // } catch (err) {
+// //   console.error(err);
+// //   setError("Error connecting to server.");
+// // }
+// try {
+//   const res = await fetch("http://localhost/crime_api/reset-password", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     credentials: "include",
+//     body: JSON.stringify({ password }),
+//   });
+
+//   const contentType = res.headers.get("content-type");
+
+//   if (!res.ok) {
+//     if (contentType && contentType.includes("application/json")) {
+//       const data = await res.json();
+//       setError(data.message || "Failed to reset password");
+//     } else {
+//       const text = await res.text();
+//       setError(text || "Failed to reset password");
+//     }
+//     return;
+//   }
+
+//   if (contentType && contentType.includes("application/json")) {
+//     const data = await res.json();
+//     setSuccess(data.message);
+//     setError("");
+//   } else {
+//     setSuccess("Password reset successful.");
+//     setError("");
+//     router.push("/auth/Login");
+
+//   }
+// } catch (err) {
+//   console.error(err);
+//   setError("Error connecting to server.");
+// }
+
+//   };
+
+const handleSubmit = async () => {
+  if (password !== confirm) {
+    setError("Passwords do not match.");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost/crime_api/reset-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ password }),
+    });
+
+    const contentType = res.headers.get("content-type");
+
+    if (!res.ok) {
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        setError(data.message || "Failed to reset password");
+      } else {
+        const text = await res.text();
+        setError(text || "Failed to reset password");
+      }
       return;
     }
 
-    try {
-      const res = await fetch("http://localhost/crime_api/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ password }),
-      });
-
+    let message = "Password reset successful.";
+    if (contentType && contentType.includes("application/json")) {
       const data = await res.json();
-
-      if (res.ok) {
-        setSuccess(data.message);
-        setError("");
-      } else {
-        setError(data.message || "Failed to reset password");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Error connecting to server.");
+      message = data.message || message;
     }
-    
-  };
+
+    setSuccess(message);
+    setError("");
+
+    // Redirect to login after short delay
+    setTimeout(() => {
+      router.push("/auth/Login");
+    }, 2000); // 2 seconds
+
+  } catch (err) {
+    console.error(err);
+    setError("Error connecting to server.");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
