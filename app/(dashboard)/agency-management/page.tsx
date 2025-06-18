@@ -1,12 +1,27 @@
 "use client";
 
 import React, { useState } from "react";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import UserCard from "@/Component/UserCard/UserCard";
 import AgencyManagementTable from "@/Components/Tables/AgencyManagementTable";
 import AddZoneModal from "@/Components/modals/AddZoneModal"; // path might differ
 
 const AgencyManagementPage = () => {
   const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true); // ← prevent premature render
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) return null; // or a spinner
 
   return (
     <main className="p-4 space-y-6">

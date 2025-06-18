@@ -2,6 +2,7 @@
 import React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import FileUpload from "@/Components/FileUpload";
 
 export default function CrimeReportForm() {
   const [formData, setFormData] = useState({
@@ -336,6 +337,7 @@ export default function CrimeReportForm() {
               />
             </div>
           </fieldset>
+          <FileUpload />
 
           {/* Ethical Considerations */}
           <fieldset>

@@ -120,26 +120,19 @@ export default function OTPResetPage() {
 
   return (
     <div className="min-h-screen grid grid-cols-1 md:grid-cols-2">
-      {/* Left Section */}
-      <div className="bg-green-800 relative flex items-center justify-center p-6">
-        <div className="absolute inset-0 bg-opacity-90 bg-green-800 z-0">
-          <div className="absolute inset-0 opacity-20"></div>
-        </div>
-        <div className="z-10 text-white text-center">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold mt-4">
-              BDIC DIGITAL CRIME DAIRY.
-            </h1>
-          </div>
-          <div className="flex flex-col items-center">
-            <Image
-              src="/images/officer.png"
-              alt="Male Officer"
-              width={120}
-              height={240}
-              className="mb-2"
-            />
-          </div>
+      {/* Left side */}
+      <div className="w-full md:w-1/2 bg-green-700 text-white flex flex-col justify-center items-center p-6">
+        <div className="max-w-sm text-center">
+          <h1 className="text-2xl font-bold mb-4">
+            BDIC DIGITAL CRIME DAIRY SOLUTION.
+          </h1>
+          <Image
+            src="/images/officer.png"
+            alt="Officers"
+            width={300}
+            height={400}
+            className="mx-auto"
+          />
         </div>
       </div>
 

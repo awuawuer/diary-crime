@@ -34,27 +34,22 @@ export default function EditModal({
         </button>
         <h2 className="text-lg font-semibold mb-4">Edit Case Details</h2>
         <div className="space-y-3">
-          {[
-            "jurisdiction",
-            "type",
-            "agency",
-            "category",
-            "caseNo",
-            "status",
-          ].map((field) => (
-            <div key={field}>
-              <label className="block text-sm font-medium mb-1 capitalize">
-                {field}
-              </label>
-              <input
-                type="text"
-                name={field}
-                value={form[field] || ""}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border rounded-md text-sm"
-              />
-            </div>
-          ))}
+          {["zone", "type", "agency", "category", "caseNo", "status"].map(
+            (field) => (
+              <div key={field}>
+                <label className="block text-sm font-medium mb-1 capitalize">
+                  {field}
+                </label>
+                <input
+                  type="text"
+                  name={field}
+                  value={form[field] || ""}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border rounded-md text-sm"
+                />
+              </div>
+            )
+          )}
           <button
             onClick={handleSubmit}
             className="bg-green-600 text-white w-full py-2 rounded-md mt-4 hover:bg-green-700"

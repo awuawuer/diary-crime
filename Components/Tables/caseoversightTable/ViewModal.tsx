@@ -23,7 +23,7 @@ export default function ViewModal({
             <strong>S/N:</strong> {caseData.sn}
           </p>
           <p>
-            <strong>Jurisdiction:</strong> {caseData.jurisdiction}
+            <strong>Zone:</strong> {caseData.zone}
           </p>
           <p>
             <strong>Type:</strong> {caseData.type}

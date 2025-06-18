@@ -1,6 +1,7 @@
 "use client";
 
 import { Eye, X, Edit, Trash } from "lucide-react";
+import Pagination from "@/Components/pagination";
 
 type Case = {
   sn: number;
@@ -141,6 +142,11 @@ export default function CaseOverviewTable() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => console.log("Go to", page)}
+      />
     </div>
   );
 }

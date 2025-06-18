@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+
 import UserCard from "@/Component/UserCard/UserCard";
 import MetricCard from "@/Component/MatricCard/MatricCard";
 import Sidebar from "@/Components/Caseindicatormetric/Sidebar";
-// import Admintable from "@/Components/Tables/Admintable";
 import CaseTable from "@/Components/Tables/CaseTable";
 import JurisdictionTable from "@/Components/Tables/JurisdictionTable";
 
@@ -15,7 +16,20 @@ const NigeriaChoroplethMap = dynamic<{ year: string }>(
 );
 
 const AdminPage = () => {
+  const router = useRouter();
   const [year, setYear] = useState("2025");
+  const [isLoading, setIsLoading] = useState(true); // ← prevent premature render
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) return null; // or a spinner
 
   return (
     <main className="p-4 space-y-8">
@@ -34,17 +48,16 @@ const AdminPage = () => {
       <div className="flex flex-col md:flex-row min-h-screen p-4 bg-gray-50">
         <div className="w-full md:w-2/3">
           <h2 className="text-xl font-semibold mb-4">Nigeria Crime Data Map</h2>
-          <NigeriaChoroplethMap year={year} /> {/* ✅ This will work now */}
+          <NigeriaChoroplethMap year={year} />
         </div>
         <Sidebar year={year} setYear={setYear} />
       </div>
+
       <div className="min-h-screen bg-gray-100">
-        {/* <main className="container mx-auto py-8 px-4 lg:px-8"> */}
         <div className="space-y-8">
           <CaseTable />
           <JurisdictionTable />
         </div>
-        {/* </main> */}
       </div>
     </main>
   );

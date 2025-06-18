@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BarChart2, Users, Shield, FileText } from "lucide-react";
 import AnalyticsBarChart from "@/Components/charts/AnalyticsBarChart";
 import AnalyticsPieChart from "@/Components/charts/AnalyticsPieChart";
@@ -29,6 +31,18 @@ const metricCard = [
 ];
 
 export default function AnalyticsDashboard() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true); // ← prevent premature render
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) return null; // or a spinner
   return (
     <div className="p-6 space-y-6">
       <h1 className="text-2xl font-bold text-gray-800">Analytics & Reports</h1>
