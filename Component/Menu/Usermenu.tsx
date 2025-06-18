@@ -6,12 +6,14 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Users,
-  Settings,
+  Folder,
   Shield,
-  BarChart2,
+  // BarChart2,
   LogOut,
   Menu,
   X,
+  User,
+  // Settings,
 } from "lucide-react";
 
 const SidebarMenu = () => {
@@ -31,7 +33,7 @@ const SidebarMenu = () => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 h-full w-16 lg:w-64 bg-gray-500 text-gray-300 transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 z-40 h-full w-16 lg:w-64 bg-green-800 text-gray-100 transform transition-transform duration-300 ease-in-out
         ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:static lg:translate-x-0`}
@@ -66,17 +68,17 @@ const SidebarMenu = () => {
               label="New Profile"
               active={pathname === "/new-profile"}
             />
-            <SidebarLink
+            {/* <SidebarLink
               href="/analytics"
               icon={<BarChart2 className="w-6 h-6" strokeWidth={2.5} />}
               label="Analytics & Reports"
               active={pathname === "/analytics"}
-            />
+            /> */}
             <SidebarLink
-              href="/system-settings"
-              icon={<Settings className="w-6 h-6" strokeWidth={2.5} />}
-              label="System Settings"
-              active={pathname === "/system-settings"}
+              href="/Cases"
+              icon={<User className="w-6 h-6" strokeWidth={2.5} />}
+              label="Cases"
+              active={pathname === "/Cases"}
             />
             <SidebarLink
               href="/logout"

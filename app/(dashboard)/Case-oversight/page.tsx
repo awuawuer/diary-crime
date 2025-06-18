@@ -1,11 +1,26 @@
 "use client";
 import React from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import UserCard from "@/Component/UserCard/UserCard";
 import CaseoversihtTable from "@/Components/Tables/caseoversightTable/caseoversightTable";
 import CountChart from "@/Components/charts/CountChart";
 import ArrestChart from "@/Components/charts/ArrestChart";
 
 const AdminPage = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true); // ← prevent premature render
+
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) return null; // or a spinner
   return (
     <main className="p-4 space-y-8">
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 w-full">

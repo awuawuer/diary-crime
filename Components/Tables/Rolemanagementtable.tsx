@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Pencil, Trash2 } from "lucide-react";
+import Pagination from "@/Components/pagination";
 
 const users = [
   {
@@ -125,24 +126,11 @@ export default function UserRoleTable() {
         </tbody>
       </table>
 
-      <div className="flex justify-between items-center mt-4 text-sm">
-        <p className="text-gray-500">← Previous</p>
-        <div className="flex gap-1">
-          {[1, 2, 3, "...", 10].map((page, idx) => (
-            <button
-              key={idx}
-              className={`px-3 py-1 rounded-lg ${
-                page === 1
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
-        <p className="text-gray-500">Next →</p>
-      </div>
+      <Pagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => console.log("Go to", page)}
+      />
     </div>
   );
 }

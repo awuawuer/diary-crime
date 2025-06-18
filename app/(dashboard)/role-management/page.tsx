@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-// import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+
 import { Search, Download, PlusCircle } from "lucide-react";
 import Rolemanagementtable from "@/Components/Tables/Rolemanagementtable";
 import AddUserModal from "@/Components/modals/AddUserModal"; // ✅ IMPORT MODAL
@@ -13,6 +14,18 @@ export default function UserRoleManagementHeader() {
   const [searchText, setSearchText] = useState("");
   const [showModal, setShowModal] = useState(false); // ✅ MODAL STATE
 
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true); // ← prevent premature render
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("isAuthenticated");
+    if (isAuthenticated !== "true") {
+      router.push("/login");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) return null; // or a spinner
   const handleApplyFilters = () => {
     console.log("Filters applied:", { status, role, jurisdiction, searchText });
   };

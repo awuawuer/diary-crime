@@ -23,6 +23,7 @@ const slides = [
   },
   {
     id: 2,
+    image: "/images/handcuff5.png",
     backgroundImage: "/images/Background6.png",
     backgroundColor: "#1f2937",
     title: (
@@ -39,6 +40,21 @@ const slides = [
     id: 3,
     image: "/images/background7.png",
     backgroundColor: "#0f172a",
+    title: (
+      <>
+        <span className="text-white">BDIC</span>
+        <br />
+        <span className="text-green-800">DIGITAL CRIME</span>
+        <br />
+        <span className="text-white">DIARY SOLUTION</span>
+      </>
+    ),
+  },
+  {
+    id: 4,
+    image: "/images/handcuff4.png",
+    backgroundImage: "/images/Background5.png",
+    backgroundColor: "#1f2937",
     title: (
       <>
         <span className="text-white">BDIC</span>

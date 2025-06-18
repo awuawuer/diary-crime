@@ -31,7 +31,7 @@ const SidebarMenu = () => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-40 h-full w-16 lg:w-64 bg-gray-500 text-gray-300 transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 z-40 h-full w-16 lg:w-64 bg-green-800 text-gray-100 transform transition-transform duration-300 ease-in-out
         ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } lg:static lg:translate-x-0`}
@@ -45,8 +45,8 @@ const SidebarMenu = () => {
             <Image
               src="/images/BDICLOGO.png"
               alt="logo"
-              width={32}
-              height={32}
+              width={40}
+              height={40}
             />
             <span className="hidden lg:block font-bold text-white">BDIC</span>
           </Link>
@@ -54,22 +54,22 @@ const SidebarMenu = () => {
           {/* Sidebar Links */}
           <div className="space-y-2 text-[12px] font-[Sora]">
             <SidebarLink
-              href="/Dashboard"
+              href="/admin"
               icon={<Home className="w-6 h-6" strokeWidth={2.5} />}
               label="Dashboard"
-              active={pathname === "/Dashboard"}
+              active={pathname === "/admin"}
             />
             <SidebarLink
-              href="/Case-oversight"
+              href="/case-oversight"
               icon={<Shield className="w-6 h-6" strokeWidth={2.5} />}
               label="Case Oversight"
-              active={pathname === "/Case-oversight"}
+              active={pathname === "/case-oversight"}
             />
             <SidebarLink
-              href="/User-role-management"
+              href="/role-management"
               icon={<Users className="w-6 h-6" strokeWidth={2.5} />}
               label="User & Role Management"
-              active={pathname === "/User-role-management"}
+              active={pathname === "/role-management"}
             />
             <SidebarLink
               href="/agency-management"

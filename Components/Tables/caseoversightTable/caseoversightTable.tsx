@@ -5,11 +5,12 @@ import { Eye, X, Edit, Trash } from "lucide-react";
 
 import ViewModal from "@/Components/Tables/caseoversightTable/ViewModal";
 import EditModal from "@/Components/Tables/caseoversightTable/EditModal";
+import Pagination from "@/Components/pagination";
 
 const initialCases = [
   {
     sn: 1,
-    jurisdiction: "Central Precinct",
+    zone: "Central Precinct",
     type: "State Headquarters",
     agency: "Police",
     category: "Felony",
@@ -18,7 +19,7 @@ const initialCases = [
   },
   {
     sn: 2,
-    jurisdiction: "Central Precinct",
+    zone: "Central Precinct",
     type: "State Headquarters",
     agency: "EFCC",
     category: "Misdemeanour",
@@ -27,7 +28,7 @@ const initialCases = [
   },
   {
     sn: 3,
-    jurisdiction: "Central Precinct",
+    zone: "Central Precinct",
     type: "State Headquarters",
     agency: "NDLEA",
     category: "Drug trafficking",
@@ -36,7 +37,7 @@ const initialCases = [
   },
   {
     sn: 4,
-    jurisdiction: "Central Precinct",
+    zone: "Central Precinct",
     type: "State Headquarters",
     agency: "Police",
     category: "Hit and run",
@@ -116,7 +117,7 @@ export default function CaseTable() {
           <thead className="bg-gray-50">
             <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
               <th className="px-3 py-2">S/N</th>
-              <th className="px-3 py-2">Jurisdiction Name</th>
+              <th className="px-3 py-2">Zone</th>
               <th className="px-3 py-2">Type</th>
               <th className="px-3 py-2">Agency</th>
               <th className="px-3 py-2">Category</th>
@@ -136,9 +137,7 @@ export default function CaseTable() {
               filteredCases.map((item) => (
                 <tr key={item.sn} className="text-sm">
                   <td className="px-3 py-2">{item.sn}</td>
-                  <td className="px-3 py-2 whitespace-nowrap">
-                    {item.jurisdiction}
-                  </td>
+                  <td className="px-3 py-2 whitespace-nowrap">{item.zone}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{item.type}</td>
                   <td className="px-3 py-2 whitespace-nowrap">{item.agency}</td>
                   <td className="px-3 py-2 whitespace-nowrap">
@@ -203,6 +202,11 @@ export default function CaseTable() {
           onSave={handleSaveEdit}
         />
       )}
+      <Pagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => console.log("Go to", page)}
+      />
     </div>
   );
 }

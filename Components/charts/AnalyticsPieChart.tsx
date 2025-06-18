@@ -34,7 +34,20 @@ const pieData = [
   { name: "NCoS", value: 200, fullName: "Nigeria Correctional Service" },
 ];
 
-const COLORS = ["#22c55e", "#3b82f6", "#facc15", "#ef4444"];
+const COLORS = [
+  "#2563eb", // NPF - Blue
+  "#16a34a", // NSCDC - Green
+  "#f59e0b", // NAPTIP - Amber
+  "#dc2626", // NAF - Red
+  "#7c3aed", // DSS - Purple
+  "#0d9488", // NIS - Teal
+  "#f43f5e", // NCS - Rose
+  "#eab308", // EFCC - Yellow
+  "#4f46e5", // NDLEA - Indigo
+  "#10b981", // FRSC - Emerald
+  "#ea580c", // NIA - Orange
+  "#6b7280", // NCoS - Gray
+];
 
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -52,7 +65,7 @@ const PieChartComponent = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow">
       <h2 className="text-lg font-semibold mb-4">Reports by Agency</h2>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={400}>
         <PieChart>
           <Pie
             data={pieData}
@@ -60,15 +73,12 @@ const PieChartComponent = () => {
             cy="50%"
             labelLine={false}
             label={({ name }) => name}
-            outerRadius={100}
+            outerRadius={150}
             fill="#8884d8"
             dataKey="value"
           >
             {pieData.map((entry, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
+              <Cell key={`cell-${index}`} fill={COLORS[index]} />
             ))}
           </Pie>
           <Tooltip content={<CustomTooltip />} />

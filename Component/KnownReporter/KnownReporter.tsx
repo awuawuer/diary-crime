@@ -5,9 +5,7 @@ import Link from "next/link";
 import { fetchUserProfile } from "@/lib/auth"; // Adjust the path if needed
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-
-
+import FileUpload from "@/Components/FileUpload";
 
 export default function CrimeReportForm() {
   const [user, setUser] = useState<any | null>(null);
@@ -24,7 +22,7 @@ export default function CrimeReportForm() {
           return;
         }
         setUser(profile);
-  
+
         // Pre-fill form fields from session data
         setFormData((prev) => ({
           ...prev,
@@ -32,7 +30,6 @@ export default function CrimeReportForm() {
           email: profile.email || "",
           phone: profile.phone || "",
           track_id: profile.user_id || "",
-
         }));
       } catch (err) {
         router.replace("/auth/Login");
@@ -40,10 +37,9 @@ export default function CrimeReportForm() {
         setLoading(false);
       }
     };
-  
+
     verify();
   }, []);
-  
 
   const [formData, setFormData] = useState({
     name: "",
@@ -95,14 +91,14 @@ export default function CrimeReportForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!ethicalAccepted) {
       setShowError(true);
       return;
     }
-  
+
     setShowError(false);
-  
+
     try {
       const res = await fetch("http://localhost/crime_api/known", {
         method: "POST",
@@ -110,7 +106,7 @@ export default function CrimeReportForm() {
         body: JSON.stringify(formData),
         credentials: "include", // Include cookies for session-based auth
       });
-  
+
       if (res.ok) {
         const data = await res.json();
         console.log("Form submitted successfully:", data);
@@ -125,11 +121,13 @@ export default function CrimeReportForm() {
       alert("An error occurred. Please try again.");
     }
   };
-  
+
   if (submitted) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-8 text-center">
-        <h1 className="text-3xl font-bold mb-4">Your report is recieved. Thank you!</h1>
+        <h1 className="text-3xl font-bold mb-4">
+          Your report is recieved. Thank you!
+        </h1>
         <p className="text-lg">
           We appreciate your contribution to justice and safety.
         </p>
@@ -185,7 +183,8 @@ export default function CrimeReportForm() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full border rounded p-2 mt-1"
-                required readOnly
+                required
+                readOnly
               />
             </div>
           </fieldset>
@@ -390,22 +389,59 @@ export default function CrimeReportForm() {
               />
             </div>
 
-              <input
-                type="hidden"
-                name="status"
-                value={formData.status}
-                onChange={handleChange}
-                className="w-full border rounded p-2 mt-1"
-              />
+            <input
+              type="hidden"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full border rounded p-2 mt-1"
+            />
 
-<input
-                type="hidden"
-                name="track_id"
-                value={formData.track_id}
-                onChange={handleChange}
+            <input
+              type="hidden"
+              name="track_id"
+              value={formData.track_id}
+              onChange={handleChange}
+              className="w-full border rounded p-2 mt-1"
+            />
+          </fieldset>
+          {/* Other Evidence */}
+          <fieldset>
+            <legend className="text-xl font-semibold mb-2 text-green-700">
+              Other Evidence
+            </legend>
+            <div>
+              <label className="block font-medium">Upload Images</label>
+              <input
+                type="file"
+                name="evidence_images"
+                accept="image/*"
+                multiple
                 className="w-full border rounded p-2 mt-1"
               />
+            </div>
+            <div>
+              <label className="block font-medium">Upload Videos</label>
+              <input
+                type="file"
+                name="evidence_videos"
+                accept="video/*"
+                multiple
+                className="w-full border rounded p-2 mt-1"
+              />
+            </div>
+            <div>
+              <label className="block font-medium">Upload Audio Files</label>
+              <input
+                type="file"
+                name="evidence_audio"
+                accept="audio/*"
+                multiple
+                className="w-full border rounded p-2 mt-1"
+              />
+            </div>
           </fieldset>
+          <FileUpload />
 
           {/* Ethical Considerations */}
           <fieldset>
@@ -437,12 +473,11 @@ export default function CrimeReportForm() {
 
           <div className="text-center">
             <button
-  type="submit"
-  className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
->
-Submit Report
-</button>
-
+              type="submit"
+              className="w-full bg-green-800 text-white py-2 rounded hover:bg-green-700 transition"
+            >
+              Submit Report
+            </button>
           </div>
         </form>
       </div>

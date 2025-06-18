@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Edit, Trash, Eye, X } from "lucide-react";
-
+import Pagination from "@/Components/pagination";
 type Jurisdiction = {
   sn: number;
   name: string;
@@ -149,6 +149,11 @@ export default function JurisdictionTable() {
           </tbody>
         </table>
       </div>
+      <Pagination
+        currentPage={1}
+        totalPages={10}
+        onPageChange={(page) => console.log("Go to", page)}
+      />
     </div>
   );
 }
