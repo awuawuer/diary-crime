@@ -2,6 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 
 export default function OTPResetPage() {
   const [otp, setOtp] = useState<string[]>(Array(6).fill(""));
@@ -9,10 +11,13 @@ export default function OTPResetPage() {
   const [resendTimer, setResendTimer] = useState<number>(30);
   const [canResend, setCanResend] = useState<boolean>(false);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const router = useRouter();
+  const [info, setInfo] = useState("");
+
 
   useEffect(() => {
     if (resendTimer > 0) {
-      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
+      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 3000);
       return () => clearTimeout(timer);
     } else {
       setCanResend(true);
@@ -35,22 +40,82 @@ export default function OTPResetPage() {
     }
   };
 
-  const handleReset = () => {
+  // const handleReset = () => {
+  //   if (otp.some((digit) => digit === "")) {
+  //     setError("Please enter all 6 digits of the OTP.");
+  //   } else {
+  //     setError("");
+  //     console.log("Entered OTP:", otp.join(""));
+  //     // Proceed with OTP submission logic here
+  //   }
+  // };
+
+
+  const handleReset = async () => {
     if (otp.some((digit) => digit === "")) {
       setError("Please enter all 6 digits of the OTP.");
-    } else {
-      setError("");
-      console.log("Entered OTP:", otp.join(""));
-      // Proceed with OTP submission logic here
+      return;
+    }
+  
+    setError("");
+    const enteredOTP = otp.join("");
+  
+    try {
+      const res = await fetch("http://localhost/crime_api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // for session
+        body: JSON.stringify({ otp: enteredOTP }),
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+        alert("OTP verified successfully! Redirecting...");
+        // redirect to reset page or login
+          router.push("/auth/reset-password"); // use useRouter from next/navigation
+      } else {
+        setError(data.message || "OTP verification failed.");
+      }
+    } catch (err) {
+      console.error("Error verifying OTP:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
+  
 
-  const handleResendOTP = () => {
-    console.log("Resend OTP logic triggered");
+  const handleResendOTP = async () => {
     setOtp(Array(6).fill(""));
     setCanResend(false);
     setResendTimer(30);
-    // Add your resend OTP logic here
+  
+    try {
+      const res = await fetch("http://localhost/crime_api/resend-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // Important for sessions
+      });
+  
+      const data = await res.json();
+  
+      if (res.ok) {
+      //   alert("OTP has been resent to your email.");
+      // } else {
+      //   setError(data.message || "Failed to resend OTP.");
+      // }
+      setInfo("OTP has been resent. Please check your email.");
+  setError("");
+} else {
+  setError(data.message || "Failed to resend OTP.");
+  setInfo("");
+}
+    } catch (err) {
+      console.error("Error resending OTP:", err);
+      setError("Something went wrong. Please try again.");
+    }
+  
+  
+    
   };
 
   return (
@@ -96,8 +161,13 @@ export default function OTPResetPage() {
             ))}
           </div>
           {error && (
-            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+            <p className="text-red-500 text-sm mb-4 text-center">{error}</p> // Error message
           )}
+
+          {info && (
+            <p className="text-green-600 text-sm mb-4 text-center">{info}</p> // success message
+          )}
+
           <button
             onClick={handleReset}
             className="w-full bg-green-900 text-white py-2 rounded hover:bg-green-800"
