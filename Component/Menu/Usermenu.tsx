@@ -65,7 +65,7 @@ const SidebarMenu = () => {
             <SidebarLink
               href="/new-profile"
               icon={<Shield className="w-6 h-6" strokeWidth={2.5} />}
-              label="New Profile"
+              label="New Suspect"
               active={pathname === "/new-profile"}
             />
             {/* <SidebarLink

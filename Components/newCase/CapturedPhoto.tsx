@@ -49,7 +49,7 @@ export default function PhotoCaptureSection() {
               onClick={() => triggerCapture(label)}
               className="border font-semibold text-sm py-6 px-4 rounded hover:bg-gray-100 w-full"
             >
-              {photos[label] ? "Retake " + label : label + " +"}
+              {photos[label] ? label : label + " +"}
             </button>
             {photos[label] && (
               <img

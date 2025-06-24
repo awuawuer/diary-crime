@@ -61,7 +61,8 @@ const tabs: {
     hasRef: true,
   },
   {
-    label: "Crime details",
+    // label: "Crime details",
+    label: "Case details",
     key: "crime",
     component: CrimeDetails,
     hasRef: true,
@@ -129,9 +130,9 @@ export default function ProfileNewCase() {
     <section className="px-4 md:px-8 py-6 bg-white">
       <div className="mb-4">
         <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
-          Profile new case
+          Create new suspect
         </h1>
-        <p className="text-sm text-gray-500">Enter details for a new case</p>
+        {/* <p className="text-sm text-gray-500">Enter details new suspect</p> */}
       </div>
 
       <div className="border-b border-gray-200 mb-6">
@@ -181,7 +182,7 @@ export default function ProfileNewCase() {
               onClick={handleSubmitAll}
               className="bg-green-800 text-white px-6 py-2 rounded hover:bg-green-700"
             >
-              Submit Case
+              Submit profile
             </button>
             <button
               onClick={() => (window.location.href = "/user-dashboard")}

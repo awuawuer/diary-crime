@@ -12,7 +12,7 @@ export default function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (email === "awuawuerphilipn@gmail.com" && password === "password12345") {
+    if (email === "testing@gmail.com" && password === "123456") {
       // ✅ Save auth flag
       localStorage.setItem("isAuthenticated", "true");
 
@@ -20,8 +20,8 @@ export default function LoginPage() {
       localStorage.setItem(
         "user",
         JSON.stringify({
-          name: "ASP Philip Awuaweur",
-          email: "awuawuerphilipn@gmail.com",
+          name: "Officer",
+          email: "testing@gmail.com",
         })
       );
 
@@ -38,7 +38,7 @@ export default function LoginPage() {
         onSubmit={handleLogin}
         className="bg-white p-6 rounded shadow-md w-full max-w-md space-y-4"
       >
-        <h1 className="text-2xl font-bold text-center">Login</h1>
+        <h1 className="text-2xl text-green-500 font-bold text-center">Admin Login</h1>
 
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
@@ -53,7 +53,7 @@ export default function LoginPage() {
         <input
           type="password"
           placeholder="Password"
-          className="w-full p-2 border rounded"
+          className="w-full text--500 p-2 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -62,7 +62,7 @@ export default function LoginPage() {
           type="submit"
           className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
         >
-          Sign In
+          Login
         </button>
       </form>
     </div>

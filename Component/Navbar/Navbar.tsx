@@ -66,8 +66,10 @@ export default function DashboardHeader() {
     <div className="flex items-center justify-between px-4 md:px-8 py-4 w-full">
       {/* Left: Title and Subtitle */}
       <div>
-        <h1 className="text-xl font-semibold text-black">Cases</h1>
-        <p className="text-sm text-gray-500">View about your cases</p>
+
+        {/* I COMMENTED THE BELOW: */}
+        {/* <h1 className="text-xl font-semibold text-black">Cases</h1>
+        <p className="text-sm text-gray-500">View about your cases</p> */}
       </div>
 
       {/* Right: Notification and User Info */}
