@@ -184,7 +184,13 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Download, PlusCircle } from "lucide-react";
 import Rolemanagementtable from "@/Components/Tables/Rolemanagementtable";
-import AddUserModal from "@/Components/modals/AddUserModal";
+import testtable from "@/Components/Tables/testtable";
+// import AddUserModal from "@/Components/modals/AddUserModal";
+import AddOfficerModal from "@/Components/modals/AddOfficerModal";
+import AddRolePermissionModal from "@/Components/modals/AddRolePermissionModal";
+import RolePermissionModal from "@/Components/modals/RolePermissionModal";
+import AssignRoleToOfficerModal from "@/Components/modals/AssignRoleToOfficerModal";
+
 
 type Option = { id: string; name: string };
 type Agency = { code: string; name: string };
@@ -204,16 +210,34 @@ export default function UserRoleManagementHeader() {
 
   // Dropdown options
   const [statuses, setStatuses] = useState<string[]>([]);
-  const [roles, setRoles] = useState<string[]>([]);
+  // const [roles, setRoles] = useState<string[]>([]);
   const [agencies, setAgencies] = useState<Agency[]>([]);
   const [zones, setZones] = useState<Option[]>([]);
   const [states, setStates] = useState<Option[]>([]);
   const [lgas, setLgas] = useState<Option[]>([]);
   const [divisions, setDivisions] = useState<Option[]>([]);
 
+  interface Role {
+    id: string;
+    name: string;
+  }
+  
+  const [roles, setRoles] = useState<Role[]>([]);
+  
+
   // Others
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [showOfficerModal, setShowOfficerModal] = useState(false);
+const [showRolePermissionModal, setShowRolePermissionModal] = useState(false);
+const [showAssignRolePermissionModal, setShowAssignRolePermissionModal] = useState(false);
+const [showAssignRoleToOfficerModal, setshowAssignRoleToOfficerModal] = useState(false);
+
+const handleAddOfficer = () => setShowOfficerModal(true);
+const handleAddRolePermission = () => setShowRolePermissionModal(true);
+const handleAssignRolePermission = () => setShowAssignRolePermissionModal(true);
+const handleAssignRoleToOfficer = () => setshowAssignRoleToOfficerModal(true);
+
 
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("isAuthenticated");
@@ -248,7 +272,8 @@ export default function UserRoleManagementHeader() {
         ]);
 
         if (Array.isArray(statusData)) setStatuses(statusData);
-        if (Array.isArray(roleData)) setRoles(roleData);
+        // if (Array.isArray(roleData)) setRoles(roleData);
+        if (roleData.roles) setRoles(roleData.roles);
         if (Array.isArray(agencyData)) setAgencies(agencyData);
         if (Array.isArray(zoneData)) setZones(zoneData);
         if (Array.isArray(stateData)) setStates(stateData);
@@ -268,14 +293,21 @@ export default function UserRoleManagementHeader() {
     console.log("Exporting data...");
   };
 
-  const handleAddUser = () => {
-    setShowModal(true);
-  };
+  // const handleAddOfficer = () => {
+  //   setShowModal(true);
+  // };
 
   return (
     <div className="w-full p-4 md:p-6">
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
+      <button onClick={() => router.push(`/role-management/RoleTable`)} className="text-blue-600 underline">
+                  View Roles
+                </button>
+                <button onClick={() => router.push(`/role-management/PermissionList`)} className="text-blue-600 underline">
+                  View Permisions
+                </button>
+
         <h1 className="text-xl text-blue-500 font-semibold">Super Admin Dashboard</h1>
         <p className="text-sm text-gray-500">View and manage agencies and users</p>
       </div>
@@ -284,20 +316,34 @@ export default function UserRoleManagementHeader() {
           <Search className="w-4 h-4 text-gray-400 mr-2" />
           <input
             type="text"
-            placeholder="Search by name, role, agency or email"
+            placeholder="Search by first or last name, email, employment number or officer code"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             className="outline-none w-full"
           />
         </div>  
         <div className="flex gap-2 ml-auto">
+
+        <button onClick={handleAddOfficer} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
+            <PlusCircle className="w-4 h-4" /> Add New user
+          </button>
+        <button onClick={handleAddRolePermission} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
+            <PlusCircle className="w-4 h-4" /> Add Role and Permission
+          </button>
+
+        <button onClick={handleAssignRolePermission} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
+            <PlusCircle className="w-4 h-4" /> Assign Permissions to Role
+          </button>
+
+        <button onClick={handleAssignRoleToOfficer} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
+            <PlusCircle className="w-4 h-4" /> Assign Role user
+          </button>
+
+
           <button onClick={handleExport} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
             <Download className="w-4 h-4" /> Export
           </button>
 
-          <button onClick={handleAddUser} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
-            <PlusCircle className="w-4 h-4" /> Add New User
-          </button>
       
         </div>
         </div>
@@ -313,8 +359,11 @@ export default function UserRoleManagementHeader() {
           <select value={role} onChange={(e) => setRole(e.target.value)} className="border border-gray-300 rounded-md px-3 py-2 text-sm">
             <option value="">Role</option>
             {roles.map((r) => (
-              <option key={r} value={r}>{r}</option>
-            ))}
+            <option key={r.id} value={r.id}>
+            {r.name}
+          </option>
+        ))}
+
           </select>
 
           <select value={agency} onChange={(e) => setAgency(e.target.value)} className="border border-gray-300 rounded-md px-3 py-2 text-sm">
@@ -352,13 +401,6 @@ export default function UserRoleManagementHeader() {
             ))}
           </select>
 
-          {/* <button onClick={handleExport} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
-            <Download className="w-4 h-4" /> Export
-          </button>
-
-          <button onClick={handleAddUser} className="bg-green-800 text-white px-4 py-2 rounded-md flex items-center gap-1 text-sm">
-            <PlusCircle className="w-4 h-4" /> Add New User
-          </button> */}
         </div>
       </div>
 
@@ -366,7 +408,14 @@ export default function UserRoleManagementHeader() {
         filters={{ status, role, agency, searchText, zone, state: stateId, lga, division }}
       />
 
-      {showModal && <AddUserModal onClose={() => setShowModal(false)} />}
+      {/* {showModal && <AddUserModal onClose={() => setShowModal(false)} />} */}
+      {/* {showOfficerModal && <AddOfficerModal onClose={() => setShowOfficerModal(false)} />} */}
+
+      {showOfficerModal && <AddOfficerModal onClose={() => setShowOfficerModal(false)} />}
+{showRolePermissionModal && <AddRolePermissionModal onClose={() => setShowRolePermissionModal(false)} />}
+{showAssignRolePermissionModal && <RolePermissionModal onClose={() => setShowAssignRolePermissionModal(false)} />}
+{showAssignRoleToOfficerModal && <AssignRoleToOfficerModal onClose={() => setshowAssignRoleToOfficerModal(false)} />}
+
     </div>
   );
 }
